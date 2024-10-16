@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    run: multicontainer-pod
+  name: multicontainer-pod
+spec:
+  containers:
+    - name: httpd
+      image: httpd
+      resources: {}
+    - name: debug
+      image: alpine
+      command:
+        - "sh"
+        - "-c"
+        - "echo  'Hello from the debug container' && sleep 3600"
+      resources: {}
+        

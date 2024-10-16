@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: httpd
+  labels:
+    app: httpd
+spec:
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 10% # 10% de 100 teremos 10 pods a mais
+  replicas: 100
+  selector:
+    matchLabels:
+      app: httpd
+  template:
+    metadata:
+      #creationTimestamp: null
+      labels:
+        app: httpd
+    spec:
+      containers:
+        - name: httpd
+          image: nginx
+
+          

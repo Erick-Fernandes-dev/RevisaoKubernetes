@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: nginx
+  name: nginx
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      #creationTimestamp: null
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - image: nginx
+        name: nginx
+        # injetar variáveis de ambiente no container
+        env:
+          - name: ENVIRONMENT
+            value: "production"
+          - name: ALUNO
+            value: "Erick"
+        readinessProbe:
+          httpGet:
+            # vai fazer um GET no path / do container
+            path: "/"
+            # porta onde o container está escutando
+            port: 80
+        livenessProbe:
+          httpGet:
+            path: "/"
+            port: 80
+        resources:
+          requests:
+            cpu: 10m
+            memory: 212M
+          limits:
+            cpu: 1
+            memory: 1G
