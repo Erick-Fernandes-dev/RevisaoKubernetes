@@ -1,0 +1,21 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: python-job
+spec:
+  template:
+    spec:
+      containers:
+      - name: python
+        image: python:3.8
+        command: 
+          - "python"
+          - "/scripts/script.py"
+        volumeMounts:
+        - name: script-volume
+          mountPath: /scripts
+      restartPolicy: "OnFailure"
+      volumes:
+      - name: script-volume
+        configMap:
+          name: python-script
