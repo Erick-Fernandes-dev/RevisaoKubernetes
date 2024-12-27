@@ -3,7 +3,8 @@ kind: Job
 metadata:
   name: echo-command
 spec:
-  #ttlSecondsAfterFinished: 100
+# Quando o job é finalizado e o pod estiver com status completado, ele será deletado após 0 segundos
+  ttlSecondsAfterFinished: 0
   template:
     spec:
       containers:
