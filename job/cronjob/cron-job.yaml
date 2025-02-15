@@ -1,0 +1,17 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: echo-command
+spec:
+  schedule: "* * * * *"
+  jobTemplate:
+    spec:
+       template:
+        spec: 
+          containers:
+          - name: sleep
+            image: alpine
+            command: 
+            - "echo"
+            - "Comunidade DevOps é fodaa!"
+          restartPolicy: "OnFailure"
