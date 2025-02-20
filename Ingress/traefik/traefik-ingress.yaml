@@ -1,11 +1,11 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: web-service-ingress
+  name: web-service-ingress-traefik
 spec:
-  ingressClassName: nginx
+  ingressClassName: traefik
   rules:
-  - host: nginx.demo.com
+  - host: traefik.demo.com
     http:
       paths:
       - path: /
