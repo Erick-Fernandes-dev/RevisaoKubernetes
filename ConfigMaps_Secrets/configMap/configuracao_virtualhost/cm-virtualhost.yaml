@@ -1,0 +1,79 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nginx-demo
+data:
+  virtual_host: "vhost.localhost.com"
+  index.html: |
+    <html>
+      <h1>Opa, chegou no index.html novo!</h1>
+    </html>
+  # Mudar o comportamento do nginx para servir o conteúdo do diretório /usr/share/nginx/app1
+  vhost.conf: |
+    server {
+      listen 80;
+      listen [::]:80;
+
+      root /usr/share/nginx/app1;
+      index index.html index.htm index.nginx-debian.html;
+
+      server_name app.localhost.com www.app.localhost.com;
+
+      location / {
+        try_files $uri $uri/ =404;
+      }  
+      
+    }
+
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: nginx
+  name: nginx
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - image: nginx
+        name: nginx
+        resources: {}
+        env:
+          - name: VIRTUAL_HOST
+            valueFrom:
+              configMapKeyRef:
+                name: nginx-demo
+                key: virtual_host
+        volumeMounts:
+          - name: index-html
+          # Fazer o mount do arquivo index.html no path /usr/share/nginx/html/index.html
+            mountPath: /usr/share/nginx/app1/index.html
+          # subPath é o arquivo que será montado no path acima
+            subPath: index.html
+          - name: vhost
+            mountPath: /etc/nginx/conf.d/vhost.conf
+            subPath: vhost.conf
+
+      volumes:
+        - name: index-html
+          configMap:
+            name: nginx-demo
+            items:
+              - key: "index.html"
+                path: "index.html"
+        - name: vhost
+          configMap:
+            name: nginx-demo
+            items:
+              - key: "vhost.conf"
+                path: "vhost.conf"
+
