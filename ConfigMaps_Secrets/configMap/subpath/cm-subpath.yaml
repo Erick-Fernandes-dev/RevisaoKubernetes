@@ -1,0 +1,55 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nginx-demo
+data:
+  virtual_host: "vhost.localhost.com"
+  index.html: |
+    <html>
+      <h1>Opa, chegou no index.html novo!</h1>
+    </html>
+
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: nginx
+  name: nginx
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - image: nginx
+        name: nginx
+        resources: {}
+        env:
+          - name: VIRTUAL_HOST
+            valueFrom:
+              configMapKeyRef:
+                name: nginx-demo
+                key: virtual_host
+        volumeMounts:
+          - name: index-html
+          # Fazer o mount do arquivo index.html no path /usr/share/nginx/html/index.html
+            mountPath: /usr/share/nginx/html/index.html
+          # subPath é o arquivo que será montado no path acima
+            subPath: index.html
+
+
+      volumes:
+        - name: index-html
+          configMap:
+            name: nginx-demo
+            items:
+              - key: "index.html"
+                path: "index.html"
+
