@@ -1,0 +1,8 @@
+resources:
+  - class.yaml
+  - rbac.yaml
+  - deploy.yaml
+  - test-pod.yaml
+  - test-reclaim.yaml
+
+#namePrefix: nfs-

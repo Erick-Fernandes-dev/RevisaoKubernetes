@@ -1,0 +1,4 @@
+resources:
+  - pvc.yaml
+  - deploy.yaml
+  #- sc.yaml

@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: myclaim-retain
+spec:
+  resources:
+    requests:
+      storage: 1Gi
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteOnce
+  volumeName: pvc-19b54169-dadb-4d49-ac3d-0c651f5fba5b
+  storageClassName: "" 
+  
