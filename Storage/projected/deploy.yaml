@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx
+        volumeMounts:
+          - name: all-in-one
+            mountPath:  /tmp
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        ports:
+        - containerPort: 80
+      volumes:
+      - name: all-in-one
+        # Ou seja, da para colocar mais de uma configuração no Projected
+        projected:
+          sources:
+            - configMap:
+                name:  nginx-demo
+                items:
+                  - key: index.html
+                    path: index.html
+                  - key: vhost.conf
+                    path: vhost.conf
+                  - key: virtual_host
+                    path: virtual_host
+            - secret:
+                name:  credentials
+                items:
+                - key: username
+                  path: creds/username
+                - key: password
+                  path: creds/password
+
+
