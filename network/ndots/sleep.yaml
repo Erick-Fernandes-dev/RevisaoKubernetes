@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  creationTimestamp: null
+  labels:
+    run: sleep
+  name: sleep
+spec:
+  containers:
+  - image: alpine
+    name: sleep
+    command:
+      - sleep
+      - "999999999" # Sleep for a long time to keep the pod running
+    resources: {}
+  dnsPolicy: ClusterFirst
+  restartPolicy: Always
+status: {}
